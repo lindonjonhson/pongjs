@@ -95,7 +95,7 @@ class GameScene extends Phaser.Scene{
 
     //  Checking if the ball hit one of the walls
     if(ball.body.x > player1.body.x){
-      console.log('Point for Player 1')
+      console.log('Point for Player 2')
     }
     if(ball.body.x < player2.body.x){
       console.log('Point for Player 2')
