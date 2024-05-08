@@ -1,13 +1,22 @@
 import './style.css'
 import Phaser from 'phaser'
 
+const gameStartDiv = document.querySelector('#gameStartDiv')
+const gameStartBtn = document.querySelector('#gameStartBtn')
+const gameEndDiv = document.querySelector('#gameEndDiv')
+const gameWinLoseSpan = document.querySelector('#gameWinLoseSpan')
+const gameEndScoreSpan = document.querySelector('#gameEndScoreSpan')
+
 let ball;
 let player1;
 let player2;
 let isGameStarted = false;
 let cursors;
 let keys = {};
+let scoreText;
 const paddleSpeed = 350;
+let scorePlayer1 = 0;
+let scorePlayer2 = 0;
 
 class GameScene extends Phaser.Scene{
   constructor(){
@@ -18,6 +27,8 @@ class GameScene extends Phaser.Scene{
     this.load.image('paddle','/assets/images/paddle.png')
   }
   create(){
+
+    this.scene.pause('scene-game')
 
     ball = this.physics.add.sprite(
       this.physics.world.bounds.width/2,
@@ -53,6 +64,12 @@ class GameScene extends Phaser.Scene{
     cursors = this.input.keyboard.createCursorKeys();
     keys.w = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
     keys.s = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+
+    //  Creating the score
+    scoreText = this.add.text(this.physics.world.bounds.width/2-25,10, 'Score:',{
+      font:'25px Arial',
+      fill:'#ffffff'
+    })
   }
   update(){
 
@@ -95,11 +112,16 @@ class GameScene extends Phaser.Scene{
 
     //  Checking if the ball hit one of the walls
     if(ball.body.x > player1.body.x){
-      console.log('Point for Player 2')
+      scorePlayer2++;
+      console.log('Player1: '+ scorePlayer1 +' Player2: '+ scorePlayer2)
+      this.scene.restart();
     }
     if(ball.body.x < player2.body.x){
-      console.log('Point for Player 2')
+      scorePlayer1++;
+      console.log('Player1: '+ scorePlayer1 +' Player2: '+ scorePlayer2)
+      this.scene.restart();
     }
+
   }
 }
 
@@ -124,3 +146,19 @@ const config={
 }
 
 const game = new Phaser.Game(config);
+
+//  Start game
+gameStartBtn.addEventListener('click', ()=>(
+    gameStartDiv.style.display='none',
+    game.scene.resume('scene-game')
+))
+
+function restartScene(){
+  //this.scene.pause('scene-game');
+  //this.scene.restart('scene-game');
+  //scene.pause();
+  scene.restart();
+
+  ball.setVelocityX(initialVelocityX);
+  ball.setVelocityY(initialVelocityY);
+};
